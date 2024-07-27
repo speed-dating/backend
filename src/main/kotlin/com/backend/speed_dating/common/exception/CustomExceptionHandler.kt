@@ -43,4 +43,10 @@ class CustomExceptionHandler {
         val errors = mapOf("Unexpected Error" to (ex.message ?: "Not Exception Message"))
         return ResponseEntity(BaseResponse(ResultCode.ERROR.name, errors, ResultCode.ERROR.msg), HttpStatus.BAD_REQUEST)
     }
+
+    @ExceptionHandler(InvalidVerificationCodeException::class)
+    protected fun handleInvalidVerificationCodeException(ex: InvalidVerificationCodeException): ResponseEntity<BaseResponse<Map<String, String>>> {
+        val errors = mapOf(ex.fieldName to ex.message)
+        return ResponseEntity(BaseResponse(ResultCode.ERROR.name, errors, ResultCode.ERROR.msg), HttpStatus.BAD_REQUEST)
+    }
 }

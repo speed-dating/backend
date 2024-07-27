@@ -23,7 +23,11 @@ class SecurityConfig(
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests { it ->
                 it
-                    .requestMatchers("/api/v1/user/signup")
+                    .requestMatchers(
+                        "/api/v1/user/signup",
+                        "/api/v1/auth/sms-verification",
+                        "/api/v1/auth/test",
+                        )
                     .anonymous()
                     .anyRequest()
                     .permitAll()
