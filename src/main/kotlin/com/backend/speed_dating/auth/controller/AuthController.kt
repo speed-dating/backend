@@ -38,6 +38,8 @@ class AuthController(
     fun verifySmsCode(
         @RequestBody @Valid payload : SmsVerificationVerifyPayload,
     ) : ResponseEntity<BaseResponse<Unit>>{
+        authService.verifySmsCode(payload)
+
         val response = BaseResponse<Unit>(
             resultCode = "SUCCESS",
             data = null,
