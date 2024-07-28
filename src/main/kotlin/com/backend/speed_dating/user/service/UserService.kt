@@ -8,9 +8,9 @@ import com.backend.speed_dating.user.dto.LoginDto
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import com.backend.speed_dating.user.dto.UserCreationDto
-import com.backend.speed_dating.user.entity.User
+import com.backend.speed_dating.user.entity.Member
 import com.backend.speed_dating.user.entity.UserRole
-import com.backend.speed_dating.user.repository.UserRepository
+import com.backend.speed_dating.user.repository.MemberRepository
 import com.backend.speed_dating.user.repository.UserRoleRepository
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
@@ -18,18 +18,18 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 @Transactional
 @Service
 class UserService(
-    private val userRepository: UserRepository,
+    private val userRepository: MemberRepository,
     private val userRoleRepository: UserRoleRepository,
     private val authenticationManagerBuilder: AuthenticationManagerBuilder,
     private val jwtTokenProvider: JwtTokenProvider,
 ){
     fun signup(payload: UserCreationDto) : String{
-        val existUser = userRepository.findByEmail(payload.email)
+        val existUser = userRepository.findByPhoneNumber(payload.phoneNumber)
         if(existUser!=null) {
             throw  InvalidInputException("email","duplicated email")
         }
 
-        val newUser : User = payload.toEntity()
+        val newUser : Member = payload.toEntity()
         userRepository.save(newUser)
 
         val userRole : UserRole = UserRole(id = null, role = Role.MEMBER, newUser)

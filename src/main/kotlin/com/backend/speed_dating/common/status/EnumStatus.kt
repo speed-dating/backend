@@ -13,3 +13,7 @@ enum class ResultCode(val msg : String) {
 enum class Role{
     MEMBER,
 }
+
+enum class CountryEnum(val desc: String){
+    KR("KR"),
+}
