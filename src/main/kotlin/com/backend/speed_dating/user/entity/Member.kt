@@ -3,6 +3,7 @@ package com.backend.speed_dating.user.entity
 import com.backend.speed_dating.common.status.CountryEnum
 import com.backend.speed_dating.common.status.Gender
 import com.backend.speed_dating.common.status.Role
+import com.backend.speed_dating.dating.entity.Participant
 import jakarta.persistence.*
 import java.time.LocalDate
 
@@ -35,6 +36,9 @@ class Member(
 ){
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
     val userRole : List<UserRole>? = null
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
+    val participants: List<Participant>? = null
 }
 
 @Entity
