@@ -24,12 +24,14 @@ class Dating(
 
     @Column(nullable = false)
     @Temporal(TemporalType.DATE)
-    val startDate: LocalDate, // 시작 날짜 추가
+    val startDate: LocalDate,
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "dating")
-    val participants: List<Participant>? = null
+    val participants: List<Participant>? = null,
 
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id", foreignKey = ForeignKey(name = "fk_dating_owner_id"), nullable = false)
+    val owner: Member,
 )
 
 @Entity
