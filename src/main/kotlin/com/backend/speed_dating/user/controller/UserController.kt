@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 import com.backend.speed_dating.user.dto.UserCreationDto
 import com.backend.speed_dating.user.service.UserService
 import jakarta.validation.Valid
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 
 @RestController
@@ -23,9 +24,15 @@ class UserController (
     fun test() : String = "hi"
 
     @PostMapping("/signup")
-    fun signup(@RequestBody @Valid payload : UserCreationDto) : BaseResponse<Unit> {
+    fun signup(@RequestBody @Valid payload : UserCreationDto) : ResponseEntity<BaseResponse<Unit>> {
+        println(payload.gender)
         val resultMsg = userService.signup(payload)
-        return BaseResponse(message = resultMsg)
+        val response = BaseResponse<Unit>(
+            resultCode = "SUCCESS",
+            data = null,
+            message = resultMsg,
+        )
+        return ResponseEntity(response, HttpStatus.CREATED)
     }
 
     @PostMapping("signIn")

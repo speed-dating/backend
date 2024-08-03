@@ -4,6 +4,7 @@ import com.backend.speed_dating.common.status.CountryEnum
 import com.backend.speed_dating.common.status.Gender
 import com.backend.speed_dating.common.status.Role
 import jakarta.persistence.*
+import java.time.LocalDate
 
 @Entity
 @Table(
@@ -22,8 +23,15 @@ class Member(
     val phoneNumber : String,
 
     @Column(nullable = false)
+    val nickname: String,
+
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     val country : CountryEnum,
+
+    @Column(nullable = false)
+    @Temporal(TemporalType.DATE)
+    val birthDate: LocalDate,
 ){
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
     val userRole : List<UserRole>? = null

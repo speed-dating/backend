@@ -22,9 +22,21 @@ data class UserCreationDto(
     private val _phoneNumber: String?,
 
     @field:NotBlank
+    @JsonProperty("nickname")
+    private val _nickname: String?,
+
+    @field:NotBlank
     @field:ValidEnum(enumClass = CountryEnum::class, message = "It must be one of value [KR]")
     @JsonProperty("country")
-    private val _country: String?
+    private val _country: String?,
+
+    @field:NotBlank
+    @field:Pattern(
+        regexp = "^([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))$",
+        message = "날짜형식(YYYY-MM-DD)을 확인해주세요"
+    )
+    @JsonProperty("birthDate")
+    private val _birthDate: String?,
 
 ){
     val phoneNumber: String
@@ -35,12 +47,20 @@ data class UserCreationDto(
 
     val country: CountryEnum
         get() = CountryEnum.valueOf(_country!!)
-    
+
+    val birthDate: LocalDate
+        get() = _birthDate!!.toLocaleDate()
+
+    val nickname: String
+        get() = _nickname!!
+
     private fun String.toLocaleDate() : LocalDate = LocalDate.parse(this, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
     fun toEntity() : Member = Member(
         phoneNumber = phoneNumber,
         country = country,
         gender = gender,
+        birthDate = birthDate,
+        nickname = nickname,
     )
 }
