@@ -38,6 +38,14 @@ data class DatingCreationPayload(
     @field:NotNull
     @JsonProperty("ownerId")
     private val _ownerId: Long?,
+
+    @field:NotNull
+    @JsonProperty("maleCapacity")
+    private val _maleCapacity: Int?,
+
+    @field:NotNull
+    @JsonProperty("femaleCapacity")
+    private val _femaleCapacity: Int?,
 ) {
     val title: String
         get() = _title!!
@@ -54,6 +62,12 @@ data class DatingCreationPayload(
     val startDate: LocalDate
         get() = _startDate!!.toLocaleDate()
 
+    val maleCapacity : Int
+        get() = _maleCapacity!!
+
+    val femaleCapacity : Int
+        get() = _femaleCapacity!!
+
     val ownerId: Long
         get() = _ownerId!!
 
@@ -65,6 +79,8 @@ data class DatingCreationPayload(
         imageUrl = imageUrl,
         price = price,
         startDate = startDate,
-        owner = owner
+        owner = owner,
+        maleCapacity = maleCapacity,
+        femaleCapacity = femaleCapacity,
     )
 }

@@ -10,6 +10,8 @@ data class DatingResponseModel(
     val imageUrl: String,
     val startDate: LocalDateTime,
     val owner: UserResponseModel,
+    val maleCapacity : Int,
+    val femaleCapacity : Int,
     val participants: List<UserResponseModel>,
 ) {
     companion object {
@@ -19,6 +21,8 @@ data class DatingResponseModel(
             description: String = "Mock Description",
             imageUrl: String = "http://example.com/image.jpg",
             startDate: LocalDateTime = LocalDateTime.now().plusDays(3).plusHours(4).plusMinutes(36),
+            maleCapacity: Int = 5,
+            femaleCapacity: Int = 5,
             owner: UserResponseModel = UserResponseModel.fixture(),
             participants: List<UserResponseModel> = listOf(UserResponseModel.fixture())
         ): DatingResponseModel {
@@ -29,7 +33,9 @@ data class DatingResponseModel(
                 imageUrl = imageUrl,
                 startDate = startDate,
                 owner = owner,
-                participants = participants
+                participants = participants,
+                maleCapacity = maleCapacity,
+                femaleCapacity = femaleCapacity,
             )
         }
     }

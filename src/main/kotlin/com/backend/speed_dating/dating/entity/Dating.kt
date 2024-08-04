@@ -26,6 +26,12 @@ class Dating(
     @Temporal(TemporalType.DATE)
     val startDate: LocalDate,
 
+    @Column(nullable = false)
+    val maleCapacity : Int,
+
+    @Column(nullable = false)
+    val femaleCapacity : Int,
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "dating")
     val participants: List<Participant>? = null,
 
