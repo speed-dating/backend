@@ -26,6 +26,10 @@ data class UserCreationDto(
     private val _nickname: String?,
 
     @field:NotBlank
+    @JsonProperty("profileImage")
+    private val _profileImage: String?,
+
+    @field:NotBlank
     @field:ValidEnum(enumClass = CountryEnum::class, message = "It must be one of value [KR]")
     @JsonProperty("country")
     private val _country: String?,
@@ -54,6 +58,9 @@ data class UserCreationDto(
     val nickname: String
         get() = _nickname!!
 
+    val profileImage: String
+        get() = _profileImage!!
+
     private fun String.toLocaleDate() : LocalDate = LocalDate.parse(this, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
     fun toEntity() : Member = Member(
@@ -62,5 +69,6 @@ data class UserCreationDto(
         gender = gender,
         birthDate = birthDate,
         nickname = nickname,
+        profileImageUrl = profileImage,
     )
 }

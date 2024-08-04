@@ -34,6 +34,9 @@ class Member(
     @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     val birthDate: LocalDate,
+
+    @Column(nullable = true)
+    val profileImageUrl: String,
 ){
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
     val userRole : List<UserRole>? = null
