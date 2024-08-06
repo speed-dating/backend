@@ -32,6 +32,7 @@ class DatingController(
         @RequestParam(required = false, defaultValue = "0") lastId: Long?,
         @RequestParam(required = false, defaultValue = "10") limit: Int?,
     ) : ResponseEntity<BaseResponse<List<DatingResponseModel>>>{
+        datingService.findAllWithParticipants()
         val data : List<DatingResponseModel> = listOf(DatingResponseModel.fixture())
         val response = BaseResponse<List<DatingResponseModel>>(
             resultCode = "SUCCESS",

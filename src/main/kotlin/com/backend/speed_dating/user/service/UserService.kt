@@ -10,7 +10,12 @@ import org.springframework.transaction.annotation.Transactional
 import com.backend.speed_dating.user.dto.UserCreationDto
 import com.backend.speed_dating.user.entity.Member
 import com.backend.speed_dating.user.entity.UserRole
+import com.backend.speed_dating.user.model.response.GalleryResponseModel
+import com.backend.speed_dating.user.model.response.ProfileResponseModel
+import com.backend.speed_dating.user.model.response.TagResponseModel
+import com.backend.speed_dating.user.repository.GalleryRepository
 import com.backend.speed_dating.user.repository.MemberRepository
+import com.backend.speed_dating.user.repository.TagRepository
 import com.backend.speed_dating.user.repository.UserRoleRepository
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
@@ -22,6 +27,8 @@ class UserService(
     private val userRoleRepository: UserRoleRepository,
     private val authenticationManagerBuilder: AuthenticationManagerBuilder,
     private val jwtTokenProvider: JwtTokenProvider,
+    private val tagRepository: TagRepository,
+    private val galleryRepository: GalleryRepository,
 ){
     fun signup(payload: UserCreationDto) : String{
         val existUser = userRepository.findByPhoneNumber(payload.phoneNumber)
@@ -43,5 +50,35 @@ class UserService(
         val authentication = authenticationManagerBuilder.`object`.authenticate(authenticationToken)
 
         return jwtTokenProvider.createToken(authentication)
+    }
+
+    @Transactional(readOnly = true)
+    fun getProfile(userId: Long) : ProfileResponseModel {
+        val user = userRepository.findById(userId).orElseThrow {
+            NoSuchElementException("User not found with ID: $userId")
+        }
+
+        val tags = tagRepository.findByMemberId(userId)
+        val galleries = galleryRepository.findByMemberId(userId)
+
+        return ProfileResponseModel(
+            id = user.id!!,
+            nickname = user.nickname,
+            birthDate = user.birthDate,
+            profileImageUrl = user.profileImageUrl,
+            introduce = user.introduce,
+            phoneNumber = user.phoneNumber,
+            gender = user.gender,
+            tags = user.tags?.map { TagResponseModel(it.id!!, it.content) } ?: emptyList(),
+            galleries = user.gallery?.map { GalleryResponseModel(it.id!!, it.imageUrl) } ?: emptyList(),
+        )
+    }
+
+    fun getUserId() : Long {
+        val user = userRepository.findAll()
+        if(user.size > 0){
+            return user[0].id!!
+        }
+        return 0
     }
 }

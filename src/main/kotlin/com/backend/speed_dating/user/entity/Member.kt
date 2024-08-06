@@ -24,6 +24,9 @@ class Member(
     @Column(nullable = false)
     val phoneNumber : String,
 
+    @Column(nullable = true)
+    val introduce : String,
+
     @Column(nullable = false)
     val nickname: String,
 
@@ -46,6 +49,12 @@ class Member(
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "owner")
     val organizedDatings: List<Dating>? = null // 주최한 데이팅 목록
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
+    val tags: List<Tag>? = null // 태그 목록
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
+    val gallery: List<Gallery>? = null // 갤러리 목록
 }
 
 @Entity

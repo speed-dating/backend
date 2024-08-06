@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import com.backend.speed_dating.user.dto.UserCreationDto
+import com.backend.speed_dating.user.model.response.ProfileResponseModel
 import com.backend.speed_dating.user.service.UserService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -39,5 +40,16 @@ class UserController (
     fun signIn(@RequestBody @Valid payload: LoginDto) : BaseResponse<TokenInfo> {
         val tokenInfo = userService.signIn(payload)
         return BaseResponse(data = tokenInfo)
+    }
+
+    @GetMapping("/profile/me")
+    fun getMyProfile() : ResponseEntity<BaseResponse<ProfileResponseModel>>{
+        val result = userService.getProfile(userService.getUserId())
+        val response = BaseResponse<ProfileResponseModel>(
+            resultCode = "SUCCESS",
+            data = result,
+            message = "ok!!",
+        )
+        return ResponseEntity(response, HttpStatus.OK)
     }
 }

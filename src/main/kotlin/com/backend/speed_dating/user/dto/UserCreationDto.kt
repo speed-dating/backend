@@ -70,5 +70,6 @@ data class UserCreationDto(
         birthDate = birthDate,
         nickname = nickname,
         profileImageUrl = profileImage,
+        introduce = "",
     )
 }
