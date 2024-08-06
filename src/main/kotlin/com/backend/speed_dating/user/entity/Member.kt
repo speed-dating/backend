@@ -3,7 +3,10 @@ package com.backend.speed_dating.user.entity
 import com.backend.speed_dating.common.status.CountryEnum
 import com.backend.speed_dating.common.status.Gender
 import com.backend.speed_dating.common.status.Role
+import com.backend.speed_dating.dating.entity.Dating
+import com.backend.speed_dating.dating.entity.Participant
 import jakarta.persistence.*
+import java.time.LocalDate
 
 @Entity
 @Table(
@@ -21,12 +24,37 @@ class Member(
     @Column(nullable = false)
     val phoneNumber : String,
 
+    @Column(nullable = true)
+    val introduce : String,
+
+    @Column(nullable = false)
+    val nickname: String,
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     val country : CountryEnum,
+
+    @Column(nullable = false)
+    @Temporal(TemporalType.DATE)
+    val birthDate: LocalDate,
+
+    @Column(nullable = true)
+    val profileImageUrl: String,
 ){
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
     val userRole : List<UserRole>? = null
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
+    val participants: List<Participant>? = null
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "owner")
+    val organizedDatings: List<Dating>? = null // 주최한 데이팅 목록
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
+    val tags: List<Tag>? = null // 태그 목록
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
+    val gallery: List<Gallery>? = null // 갤러리 목록
 }
 
 @Entity

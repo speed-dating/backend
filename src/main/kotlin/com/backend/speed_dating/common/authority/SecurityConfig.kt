@@ -31,6 +31,14 @@ class SecurityConfig(
                     .anonymous()
                     .anyRequest()
                     .permitAll()
+//                    .requestMatchers(
+//                        "/api/v1/user/signup",
+//                        "/api/v1/auth/sms-verification",
+//                        "/api/v1/auth/test"
+//                    )
+//                    .permitAll()  // 위의 요청은 인증 없이 접근 허용
+//                    .anyRequest()
+//                    .authenticated()
             }
             .addFilterBefore(
                 JwtAuthenticationFilter(jwtTokenProvider),
