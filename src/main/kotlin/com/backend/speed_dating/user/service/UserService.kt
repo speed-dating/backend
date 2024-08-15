@@ -81,4 +81,8 @@ class UserService(
         }
         return 0
     }
+
+    fun getUsersByIds(ids: List<Int>){
+
+    }
 }

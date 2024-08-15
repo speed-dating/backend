@@ -35,8 +35,15 @@ dependencies {
 	implementation("io.jsonwebtoken:jjwt-api:0.12.6")
 	implementation ("com.vonage:client:[6.1.0,7.0.0)")
 	implementation("org.springframework.boot:spring-boot-starter-data-redis")
+	implementation ("org.springframework.boot:spring-boot-configuration-processor")
+	implementation ("commons-codec:commons-codec:1.14")
+	implementation ("com.google.guava:guava:30.0-jre")
+
+	// agoraTools
+	implementation ("io.agora:authentication:2.0.0")
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.6")
 	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")
+
 }
 
 kotlin {
