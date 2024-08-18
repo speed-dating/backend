@@ -7,6 +7,7 @@ enum class Gender(val desc : String){
 
 enum class ResultCode(val msg : String) {
     SUCCESS("성공적으로 수행되었습니다."),
+    INVALID_REQUEST("Invalid request parameters"),
     ALREADY_REGISTERED("인증 성공 후, 이미 회원가입이 된 상태입니다."),
     NOT_REGISTERED("인증 성공 후, 회원가입이 되지 않은 상태입니다."),
     VERIFICATION_ERROR("인증번호 오류입니다."),
