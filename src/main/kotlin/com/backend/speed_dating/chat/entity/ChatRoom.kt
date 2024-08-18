@@ -32,7 +32,7 @@ class ChatRoom(
     var deletedAt: LocalDateTime? = null,
 
     @Column(nullable = true)
-    val opponentLeftAt: LocalDateTime? = null,
+    var opponentLeftAt: LocalDateTime? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", insertable = false, updatable = false)

@@ -45,12 +45,24 @@ class UserService(
         return "signup success"
     }
 
-    fun signIn(payload : LoginDto) : TokenInfo {
-        val authenticationToken = UsernamePasswordAuthenticationToken(payload.email,payload.password)
-        val authentication = authenticationManagerBuilder.`object`.authenticate(authenticationToken)
-
-        return jwtTokenProvider.createToken(authentication)
-    }
+    // todo : remove
+//    fun signIn(payload : LoginDto) : TokenInfo {
+//        val authenticationToken = UsernamePasswordAuthenticationToken(payload.email,payload.password)
+//        val authentication = authenticationManagerBuilder.`object`.authenticate(authenticationToken)
+//
+//        val userDetails = userService.findByEmail(payload.email)  // Adjust this method as needed
+//
+//        val userToken = UserToken(
+//            id = userDetails.id.toString(),
+//            nickname = userDetails.nickname,
+//            avatarUrl = userDetails.avatarUrl,
+//            phone = userDetails.phone,
+//            gender = userDetails.gender,  // Assuming gender is an enum in your userDetails
+//            birth = userDetails.birth.toString()
+//        )
+//
+//        return jwtTokenProvider.createToken(userToken)
+//    }
 
     @Transactional(readOnly = true)
     fun getProfile(userId: Long) : ProfileResponseModel {
