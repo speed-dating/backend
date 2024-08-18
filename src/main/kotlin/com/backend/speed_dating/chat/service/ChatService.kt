@@ -1,42 +1,66 @@
 package com.backend.speed_dating.chat.service
 
 import com.backend.speed_dating.chat.dto.payload.ChatRoomCreationPayload
+import com.backend.speed_dating.chat.dto.payload.ChatRoomDeletionPayload
+import com.backend.speed_dating.chat.entity.ChatRoom
+import com.backend.speed_dating.chat.repository.ChatRoomRepository
+import com.backend.speed_dating.common.status.Gender
 import com.backend.speed_dating.user.repository.MemberRepository
-import com.backend.speed_dating.user.service.UserService
 import org.springframework.stereotype.Service
-import java.security.MessageDigest
 
 @Service
 class ChatService(
-private val memberRepository: MemberRepository,
+    private val memberRepository: MemberRepository,
+    private val agoraService: AgoraService,
+    private val chatRoomRepository: ChatRoomRepository,
 ){
     fun createChatRoom(payload : ChatRoomCreationPayload){
 
-        val members = memberRepository.findByIdIn(payload.userIds.map { it.toLong() })
+        val members = memberRepository.findByIdIn(payload.userIds)
 
         if (members.size != payload.userIds.size) {
             throw IllegalArgumentException("One or more users do not exist.")
         }
 
+        val female = members.find { it.gender == Gender.FEMALE }
+        val male = members.find { it.gender == Gender.MALE }
 
-        // 유저 엔티티 필드 중 전화번호를 이용해 해쉬값 생성
-        val hashedUserIds = members.map { member -> hashPhoneNumber(member.phoneNumber) }
-
-        // agora api 를 호출하여 유저 생성
-        hashedUserIds.forEach {
-            hashedUserId->
+        if(female == null || male == null){
+            throw IllegalArgumentException("Failed to find both a female and a male user.")
         }
+
+        val femaleUuid = agoraService.getChatUserUuid(female.nickname)
+            ?: agoraService.registerChatUser(female.nickname)
+            ?: throw IllegalArgumentException("failed to register female")
+        val maleUuid = agoraService.getChatUserUuid(male.nickname)
+            ?: agoraService.registerChatUser(male.nickname)
+            ?: throw IllegalArgumentException("failed to register male")
+
+        val femaleChatRoom = ChatRoom(
+            id = null,
+            agoraUuid = femaleUuid,
+            datingId = payload.datingId,
+            member = female,
+            opponent = male,
+        )
+        val maleChatRoom = ChatRoom(
+            id = null,
+            agoraUuid = maleUuid,
+            datingId = payload.datingId,
+            member = male,
+            opponent = female,
+        )
+
+        chatRoomRepository.saveAll(listOf( femaleChatRoom, maleChatRoom))
+
+        // todo: agora chatting 방 생성
     }
 
-    private fun hashPhoneNumber(phoneNumber: String) : String {
-        val messageDigest = MessageDigest.getInstance("SHA-256")
-        val hashed = messageDigest.digest(phoneNumber.toByteArray()) // 000fff
-        return hashed.joinToString { "%02x".format(it) }
+    fun deleteChatRoom(payload: ChatRoomDeletionPayload){
+        // 1. memberId, opponentId, datingId 에 해당하는 chatRoom 조회
+        // 2. 해당 채팅방 삭제 (나에게서는 삭제)
+        // 3. 상대방 채팅방 비활성화 처리 -> 필드 추가
+        // 4. agora에 채팅방 삭제되었다는 api 호출
     }
 
-
-
-    fun deleteChatRoom(){}
-
-    fun createAgoraToken(){}
 }
