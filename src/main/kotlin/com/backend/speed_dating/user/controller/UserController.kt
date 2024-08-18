@@ -36,11 +36,7 @@ class UserController (
         return ResponseEntity(response, HttpStatus.CREATED)
     }
 
-    @PostMapping("signIn")
-    fun signIn(@RequestBody @Valid payload: LoginDto) : BaseResponse<TokenInfo> {
-        val tokenInfo = userService.signIn(payload)
-        return BaseResponse(data = tokenInfo)
-    }
+
 
     @GetMapping("/profile/me")
     fun getMyProfile() : ResponseEntity<BaseResponse<ProfileResponseModel>>{

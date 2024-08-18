@@ -40,7 +40,7 @@ class JwtTokenProvider () {
 
         val accessToken = Jwts
             .builder()
-            .subject(userToken.id)
+            .subject(userToken.id.toString())
             .claim("nickname", userToken.nickname)
             .claim("avatarUrl", userToken.avatarUrl)
             .claim("phone", userToken.phone)
@@ -62,7 +62,7 @@ class JwtTokenProvider () {
         val claims = getClaims(token)
 
         return UserToken(
-            id = claims.subject,
+            id = claims.subject.toLong(),
             nickname = claims["nickname"] as String,
             avatarUrl = claims["avatarUrl"] as String,
             phone = claims["phone"] as String,
