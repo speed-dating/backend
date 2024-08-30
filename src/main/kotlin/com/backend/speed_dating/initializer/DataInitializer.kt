@@ -74,17 +74,38 @@ class DataInitializer(
             )
 
             // 회원 생성
-            val members = (1..20).map { i ->
+            val members = mutableListOf<Member>()
+
+            // 루프를 통한 회원 생성
+            members.addAll(
+                (1..20).map { i ->
+                    Member(
+                        gender = if (i % 2 == 0) Gender.MALE else Gender.FEMALE,
+                        phoneNumber = "010-1234-${i.toString().padStart(4, '0')}",
+                        nickname = "User$i",
+                        country = CountryEnum.KR,
+                        birthDate = LocalDate.of(1990 + (i % 10), i % 12 + 1, i % 28 + 1),
+                        profileImageUrl = profileImageUrls[i - 1],
+                        introduce = "some introduction text"
+                    )
+                }
+            )
+
+            // 추가로 특정 회원 추가
+            members.add(
                 Member(
-                    gender = if (i % 2 == 0) Gender.MALE else Gender.FEMALE,
-                    phoneNumber = "010-1234-${i.toString().padStart(4, '0')}",
-                    nickname = "User$i",
+                    gender = Gender.MALE,
+                    phoneNumber = "01099645997",
+                    nickname = "shy",
                     country = CountryEnum.KR,
-                    birthDate = LocalDate.of(1990 + (i % 10), i % 12 + 1, i % 28 + 1),
-                    profileImageUrl = profileImageUrls[i - 1],
-                    introduce = "some introcdfsjlsefjlsdkfjl hihihihi sfjslijes"
+                    birthDate = LocalDate.of(1997, 3, 28),
+                    profileImageUrl = "http://example.com/profile.jpg",
+                    introduce = "specific user introduction"
                 )
-            }
+            )
+
+
+
 
             memberRepository.saveAll(members)
 

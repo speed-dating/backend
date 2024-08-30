@@ -1,9 +1,8 @@
 package com.backend.speed_dating.user.controller
 
-import com.backend.speed_dating.common.authority.TokenInfo
+import com.backend.speed_dating.common.annotation.UserTokenAnnotation
 import com.backend.speed_dating.common.dto.BaseResponse
-import com.backend.speed_dating.user.dto.LoginDto
-import org.springframework.stereotype.Controller
+import com.backend.speed_dating.common.dto.UserToken
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -26,7 +25,6 @@ class UserController (
 
     @PostMapping("/signup")
     fun signup(@RequestBody @Valid payload : UserCreationDto) : ResponseEntity<BaseResponse<Unit>> {
-        println(payload.gender)
         val resultMsg = userService.signup(payload)
         val response = BaseResponse<Unit>(
             resultCode = "SUCCESS",
@@ -36,15 +34,11 @@ class UserController (
         return ResponseEntity(response, HttpStatus.CREATED)
     }
 
-    @PostMapping("signIn")
-    fun signIn(@RequestBody @Valid payload: LoginDto) : BaseResponse<TokenInfo> {
-        val tokenInfo = userService.signIn(payload)
-        return BaseResponse(data = tokenInfo)
-    }
+
 
     @GetMapping("/profile/me")
-    fun getMyProfile() : ResponseEntity<BaseResponse<ProfileResponseModel>>{
-        val result = userService.getProfile(userService.getUserId())
+    fun getMyProfile(@UserTokenAnnotation userToken: UserToken) : ResponseEntity<BaseResponse<ProfileResponseModel>>{
+        val result = userService.getProfile(userToken.id)
         val response = BaseResponse<ProfileResponseModel>(
             resultCode = "SUCCESS",
             data = result,

@@ -2,6 +2,7 @@ package com.backend.speed_dating.auth.controller
 
 import com.backend.speed_dating.auth.dto.SmsVerificationPayload
 import com.backend.speed_dating.auth.dto.SmsVerificationVerifyPayload
+import com.backend.speed_dating.auth.model.response.UserVerificationResponse
 import com.backend.speed_dating.auth.service.AuthService
 import com.backend.speed_dating.common.dto.BaseResponse
 import jakarta.validation.Valid
@@ -37,12 +38,12 @@ class AuthController(
     @PostMapping("/sms-verification/verify")
     fun verifySmsCode(
         @RequestBody @Valid payload : SmsVerificationVerifyPayload,
-    ) : ResponseEntity<BaseResponse<Unit>>{
-        authService.verifySmsCode(payload)
+    ) : ResponseEntity<BaseResponse<UserVerificationResponse>>{
+        val userVerification = authService.verifySmsCode(payload)
 
-        val response = BaseResponse<Unit>(
+        val response = BaseResponse<UserVerificationResponse>(
             resultCode = "SUCCESS",
-            data = null,
+            data = userVerification,
             message = "Verification SMS sent successfully"
         )
         return ResponseEntity(response, HttpStatus.CREATED)

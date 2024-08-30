@@ -24,21 +24,12 @@ class SecurityConfig(
             .authorizeHttpRequests { it ->
                 it
                     .requestMatchers(
-                        "/api/v1/user/signup",
-                        "/api/v1/auth/sms-verification",
-                        "/api/v1/auth/test",
+                        "/api/v1/user/signup/**",
+                        "/api/v1/auth/**",
                         )
-                    .anonymous()
-                    .anyRequest()
                     .permitAll()
-//                    .requestMatchers(
-//                        "/api/v1/user/signup",
-//                        "/api/v1/auth/sms-verification",
-//                        "/api/v1/auth/test"
-//                    )
-//                    .permitAll()  // 위의 요청은 인증 없이 접근 허용
-//                    .anyRequest()
-//                    .authenticated()
+                    .anyRequest()
+                    .authenticated()
             }
             .addFilterBefore(
                 JwtAuthenticationFilter(jwtTokenProvider),

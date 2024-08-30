@@ -1,6 +1,7 @@
 package com.backend.speed_dating.user.dto
 
 import com.backend.speed_dating.common.status.Gender
+import com.backend.speed_dating.user.entity.Member
 
 data class UserResponseModel(
     val id: Number,
@@ -20,6 +21,15 @@ data class UserResponseModel(
                 nickname = nickname,
                 gender = gender,
                 profileImageUrl = profileImageUrl
+            )
+        }
+
+        fun of(member : Member) : UserResponseModel{
+            return UserResponseModel(
+                id = member.id!!,
+                nickname = member.nickname,
+                gender = member.gender,
+                profileImageUrl = member.profileImageUrl,
             )
         }
     }

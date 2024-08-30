@@ -40,7 +40,8 @@ class JwtTokenProvider () {
 
         val accessToken = Jwts
             .builder()
-            .subject(userToken.id)
+            .subject(userToken.id.toString())
+            .claim("id", userToken.id.toString())
             .claim("nickname", userToken.nickname)
             .claim("avatarUrl", userToken.avatarUrl)
             .claim("phone", userToken.phone)
@@ -49,7 +50,7 @@ class JwtTokenProvider () {
             .claim("auth", authorities)
             .issuedAt(now)
             .setExpiration(accessTokenExpiredAt)
-            .signWith(key, SignatureAlgorithm.HS256)
+            .signWith(key)
             .compact()
 
         return TokenInfo(
@@ -62,27 +63,30 @@ class JwtTokenProvider () {
         val claims = getClaims(token)
 
         return UserToken(
-            id = claims.subject,
+            id = claims.subject.toLong(),
             nickname = claims["nickname"] as String,
             avatarUrl = claims["avatarUrl"] as String,
             phone = claims["phone"] as String,
-            gender = Gender.valueOf(claims["gender"].toString()),
+            gender = Gender.entries[claims["gender"] as Int],
             birth = claims["birth"] as String
         )
     }
 
     fun getAuthentication(token : String) : Authentication {
         val claims = getClaims(token)
-
         val auth = claims["auth"] ?: throw RuntimeException("Invalid Token")
 
-        val authorities : Collection<GrantedAuthority> = (auth as String)
+        val authorities: Collection<GrantedAuthority> = (auth as String)
             .split(",")
             .map { SimpleGrantedAuthority(it) }
 
-        val principal : UserDetails = User(claims.subject, "", authorities)
+        val principal: UserDetails = User(
+            claims.subject, "", authorities
+        )
+        val authToken = UsernamePasswordAuthenticationToken(principal, "", authorities)
+        authToken.details = claims
 
-        return UsernamePasswordAuthenticationToken(principal, "", authorities)
+        return authToken
     }
 
     fun validateToken(token : String ) : Boolean {
@@ -106,6 +110,7 @@ class JwtTokenProvider () {
     private fun getClaims(token : String) : Claims =
         Jwts
             .parser()
+            .setSigningKey(key)
             .build()
             .parseClaimsJws(token)
             .body

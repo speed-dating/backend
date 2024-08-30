@@ -10,7 +10,6 @@ class DatingService(
 
     fun findAllWithParticipants(){
         val result = datingRepository.findAllWithParticipants()
-        println(result)
     }
 
 }
