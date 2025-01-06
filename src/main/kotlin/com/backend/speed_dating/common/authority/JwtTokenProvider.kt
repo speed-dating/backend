@@ -1,5 +1,7 @@
 package com.backend.speed_dating.common.authority
 
+import com.backend.speed_dating.common.dto.UserToken
+import com.backend.speed_dating.common.status.Gender
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
@@ -30,26 +32,42 @@ class JwtTokenProvider () {
 
     private val key by lazy { Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey)) }
 
-    fun createToken(authentication: Authentication) : TokenInfo {
-        val authorities : String = authentication
-            .authorities
-            .joinToString(",", transform = GrantedAuthority::getAuthority)
+    fun createToken(userToken: UserToken): TokenInfo {
+        val authorities = "ROLE_USER"  // Or fetch roles/authorities if needed
 
         val now = Date()
         val accessTokenExpiredAt = Date(now.time + EXPIRATION_MILLISECONDS)
 
         val accessToken = Jwts
             .builder()
-            .subject(authentication.name)
+            .subject(userToken.id)
+            .claim("nickname", userToken.nickname)
+            .claim("avatarUrl", userToken.avatarUrl)
+            .claim("phone", userToken.phone)
+            .claim("gender", userToken.gender.ordinal)  // Assuming gender is an enum
+            .claim("birth", userToken.birth)
             .claim("auth", authorities)
             .issuedAt(now)
-            .expiration(accessTokenExpiredAt)
+            .setExpiration(accessTokenExpiredAt)
             .signWith(key, SignatureAlgorithm.HS256)
             .compact()
 
         return TokenInfo(
             grantType = "Bearer",
             accessToken = accessToken,
+        )
+    }
+
+    fun getUserTokenFromJwt(token: String): UserToken{
+        val claims = getClaims(token)
+
+        return UserToken(
+            id = claims.subject,
+            nickname = claims["nickname"] as String,
+            avatarUrl = claims["avatarUrl"] as String,
+            phone = claims["phone"] as String,
+            gender = Gender.valueOf(claims["gender"].toString()),
+            birth = claims["birth"] as String
         )
     }
 

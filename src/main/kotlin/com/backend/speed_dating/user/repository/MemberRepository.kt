@@ -10,6 +10,8 @@ interface MemberRepository : JpaRepository<Member, Long> {
 
     @EntityGraph(attributePaths = ["tags", "gallery"])
     fun findWithTagsAndGalleryById(id: Long): Member?
+
+    fun findByIdIn(ids: List<Long>) : List<Member>
 }
 
 interface UserRoleRepository : JpaRepository<UserRole, Long> {}
